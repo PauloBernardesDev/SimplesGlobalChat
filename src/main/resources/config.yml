@@ -73,9 +73,6 @@ permissoes:
   # Permissão para administrar o chat
   admin: "simplesglobalchat.admin"
 
-  # Permissão para /broadcast
-  broadcast: "simplesglobalchat.broadcast"
-
   # Permissão para /aviso
   aviso: "simplesglobalchat.aviso"
 
@@ -109,7 +106,5 @@ mensagens:
   uso-g: "&cUtilize: /g <mensagem>"
 
   uso-anuncio: "&cUtilize: /anuncio <mensagem>"
-
-  uso-broadcast: "&cUtilize: /broadcast <mensagem>"
 
   uso-aviso: "&cUtilize: /aviso <mensagem>"
