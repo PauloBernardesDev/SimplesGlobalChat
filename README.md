@@ -7,3 +7,4 @@ Funcionalidades:
 - /criaranuncio (anuncio) (tempo) para criar um anuncio automático. (Comando administrativo)
 - Suporte de cores (Para sócios e administradores)
 - /aviso Comando administrativo que faz aparecer uma mensagem na tela de todos os jogadores.
+- Adcionado sistema de cooldown nas mensagens do chat local, /g e /anuncio. (Configurável pelo Plugin.yml)
