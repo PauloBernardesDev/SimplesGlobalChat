@@ -1,0 +1,66 @@
+name: SimplesGlobalChat
+version: 1.0.0
+main: dev.paulobernardes.simplesglobalchat.SimplesGlobalChat
+api-version: '1.21'
+
+depend:
+  - LuckPerms
+  - Vault
+
+commands:
+
+  g:
+    description: Envia uma mensagem no chat global
+    usage: /g <mensagem>
+    aliases:
+      - global
+
+  anuncio:
+    description: Envia um anúncio para todos os jogadores
+    usage: /anuncio <mensagem>
+
+  chat:
+    description: Ativa ou desativa o chat local ou global
+    usage: /chat <local|global|help>
+
+  aviso:
+    description: Envia um aviso para todos os jogadores
+    usage: /aviso <mensagem>
+
+  criaranuncio:
+    description: Cria um anúncio automático
+    usage: /criaranuncio <mensagem> <tempo>
+
+  apagaranuncio:
+    description: Apaga um anúncio automático
+    usage: /apagaranuncio <id>
+
+  editaranuncio:
+    description: Edita um anúncio automático
+    usage: /editaranuncio <id> <mensagem> <tempo>
+
+  listaranuncios:
+    description: Lista os anúncios automáticos
+    usage: /listaranuncios
+
+permissions:
+
+  simplesglobalchat.admin:
+    description: Permite administrar os chats
+    default: op
+
+  simplesglobalchat.aviso:
+    description: Permite usar o comando /aviso
+    default: op
+
+  simplesglobalchat.help:
+    description: Permite usar o /chat help
+    default: op
+
+  simplesglobalchat.cores:
+    description: Permite usar cores e efeitos no chat
+    default: false
+
+  simplesglobalchat.anuncios:
+    description: Permite administrar os anúncios automáticos
+    default: op

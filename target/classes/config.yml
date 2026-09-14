@@ -1,0 +1,115 @@
+# ==================================================
+# SimplesGlobalChat
+# ==================================================
+
+chat:
+
+  local:
+
+    # Ativa ou desativa o chat local
+    ativado: true
+
+    # Distância máxima entre os jogadores
+    raio: 50
+
+    # Formato da mensagem
+    #
+    # %prefix%  = Prefixo do LuckPerms
+    # %player%  = Nome do jogador
+    # %message% = Mensagem
+    #
+    # Jogadores do grupo default não terão prefixo.
+    formato: "&7[L] %prefix%&f%player%&7: &f%message%"
+
+
+  global:
+
+    # Ativa ou desativa o chat global
+    ativado: true
+
+    formato: "&8[G] %prefix%&7%player%&8: &7%message%"
+
+
+# ==================================================
+# ANÚNCIOS DOS JOGADORES
+# ==================================================
+
+anuncio:
+
+  # Permite ou não o uso do /anuncio
+  ativado: true
+
+  # Valor cobrado a cada anúncio
+  preco: 1000.0
+
+  # Formato do anúncio
+  formato: "&6&l[ANÚNCIO] &f%player%&7: &e%message%"
+
+# ==================================================
+# AVISO ADMINISTRATIVO
+# ==================================================
+
+aviso:
+
+  # Tempo para aparecer
+  # 20 ticks = 1 segundo
+  fade-in: 10
+
+  # Tempo que ficará na tela
+  # 20 ticks = 1 segundo
+  stay: 70
+
+  # Tempo para desaparecer
+  # 20 ticks = 1 segundo
+  fade-out: 20
+
+
+# ==================================================
+# PERMISSÕES
+# ==================================================
+
+permissoes:
+
+  # Permissão para administrar o chat
+  admin: "simplesglobalchat.admin"
+
+  # Permissão para /broadcast
+  broadcast: "simplesglobalchat.broadcast"
+
+  # Permissão para /aviso
+  aviso: "simplesglobalchat.aviso"
+
+  # Permissão para usar cores e efeitos no chat
+  cores: "simplesglobalchat.cores"
+
+  # Permissão para administrar anúncios automáticos
+  anuncios: "simplesglobalchat.anuncios"
+
+
+# ==================================================
+# MENSAGENS
+# ==================================================
+
+mensagens:
+
+  chat-global-desativado: "&cO chat global está temporariamente desativado."
+
+  chat-local-desativado: "&cO chat local está temporariamente desativado."
+
+  chat-local-sem-players: "&7Não há ninguém por perto!"
+
+  sem-permissao: "&cVocê não possui permissão para isso."
+
+  dinheiro-insuficiente: "&cVocê precisa de &e$%preco% &cpara enviar um anúncio."
+
+  anuncio-enviado: "&aSeu anúncio foi enviado por &e$%preco%&a."
+
+  recarregado: "&aConfiguração recarregada com sucesso."
+
+  uso-g: "&cUtilize: /g <mensagem>"
+
+  uso-anuncio: "&cUtilize: /anuncio <mensagem>"
+
+  uso-broadcast: "&cUtilize: /broadcast <mensagem>"
+
+  uso-aviso: "&cUtilize: /aviso <mensagem>"
