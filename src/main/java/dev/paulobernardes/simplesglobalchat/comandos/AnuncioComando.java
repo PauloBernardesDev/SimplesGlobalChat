@@ -2,6 +2,7 @@ package dev.paulobernardes.simplesglobalchat.comandos;
 
 import dev.paulobernardes.simplesglobalchat.SimplesGlobalChat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,13 +32,16 @@ public class AnuncioComando implements CommandExecutor {
     ) {
 
         if (!(sender instanceof Player jogador)) {
+
             sender.sendMessage(
                     "Este comando só pode ser usado por jogadores."
             );
+
             return true;
         }
 
         if (args.length == 0) {
+
             jogador.sendMessage(
                     colorir(
                             plugin.getConfig().getString(
@@ -46,6 +50,7 @@ public class AnuncioComando implements CommandExecutor {
                             )
                     )
             );
+
             return true;
         }
 
@@ -55,11 +60,30 @@ public class AnuncioComando implements CommandExecutor {
         );
 
         if (!ativado) {
+
             jogador.sendMessage(
                     colorir(
                             "&cO sistema de anúncios está desativado."
                     )
             );
+
+            return true;
+        }
+
+        long restante =
+                plugin.getGerenciadorCooldown()
+                        .verificarAnuncio(jogador.getUniqueId());
+
+        if (restante > 0) {
+
+            jogador.sendMessage(
+                    colorir(
+                            "&cAguarde &e"
+                                    + restante
+                                    + "s &cantes de enviar outro anúncio."
+                    )
+            );
+
             return true;
         }
 
@@ -69,6 +93,7 @@ public class AnuncioComando implements CommandExecutor {
         );
 
         if (!economia.has(jogador, preco)) {
+
             jogador.sendMessage(
                     colorir(
                             plugin.getConfig().getString(
@@ -80,12 +105,29 @@ public class AnuncioComando implements CommandExecutor {
                             )
                     )
             );
+
             return true;
         }
 
-        String mensagem = String.join(" ", args);
+        String mensagem =
+                String.join(" ", args);
 
-        economia.withdrawPlayer(jogador, preco);
+        EconomyResponse resposta =
+                economia.withdrawPlayer(
+                        jogador,
+                        preco
+                );
+
+        if (!resposta.transactionSuccess()) {
+
+            jogador.sendMessage(
+                    colorir(
+                            "&cNão foi possível realizar o pagamento do anúncio."
+                    )
+            );
+
+            return true;
+        }
 
         String formato = plugin.getConfig().getString(
                 "anuncio.formato",
@@ -93,14 +135,27 @@ public class AnuncioComando implements CommandExecutor {
         );
 
         String mensagemFinal = formato
-                .replace("%player%", jogador.getName())
-                .replace("%message%", mensagem);
+                .replace(
+                        "%player%",
+                        jogador.getName()
+                )
+                .replace(
+                        "%message%",
+                        mensagem
+                );
 
         mensagemFinal = colorir(mensagemFinal);
 
-        for (Player destinatario : Bukkit.getOnlinePlayers()) {
-            destinatario.sendMessage(mensagemFinal);
+        for (Player destinatario :
+                Bukkit.getOnlinePlayers()) {
+
+            destinatario.sendMessage(
+                    mensagemFinal
+            );
         }
+
+        plugin.getGerenciadorCooldown()
+                .iniciarAnuncio(jogador.getUniqueId());
 
         jogador.sendMessage(
                 colorir(
@@ -118,6 +173,7 @@ public class AnuncioComando implements CommandExecutor {
     }
 
     private String colorir(String mensagem) {
+
         return ChatColor.translateAlternateColorCodes(
                 '&',
                 mensagem

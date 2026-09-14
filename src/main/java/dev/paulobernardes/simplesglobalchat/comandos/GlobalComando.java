@@ -53,6 +53,23 @@ public class GlobalComando implements CommandExecutor {
             return true;
         }
 
+        long restante =
+                plugin.getGerenciadorCooldown()
+                        .verificarGlobal(jogador.getUniqueId());
+
+        if (restante > 0) {
+
+            jogador.sendMessage(
+                    colorir(
+                            "&cAguarde &e"
+                                    + restante
+                                    + "s &cantes de enviar outra mensagem global."
+                    )
+            );
+
+            return true;
+        }
+
         String mensagemJogador = String.join(" ", args);
 
         mensagemJogador = processarMensagem(
@@ -78,6 +95,9 @@ public class GlobalComando implements CommandExecutor {
         for (Player destinatario : Bukkit.getOnlinePlayers()) {
             destinatario.sendMessage(mensagemFinal);
         }
+
+        plugin.getGerenciadorCooldown()
+                .iniciarGlobal(jogador.getUniqueId());
 
         return true;
     }

@@ -1,5 +1,6 @@
 package dev.paulobernardes.simplesglobalchat;
 
+import dev.paulobernardes.simplesglobalchat.gerenciadores.GerenciadorCooldown;
 import dev.paulobernardes.simplesglobalchat.comandos.AnuncioAutomaticoComando;
 import dev.paulobernardes.simplesglobalchat.comandos.AnuncioComando;
 import dev.paulobernardes.simplesglobalchat.comandos.ChatComando;
@@ -19,13 +20,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class SimplesGlobalChat extends JavaPlugin {
 
     private LuckPerms luckPerms;
-
     private Economy economia;
-
     private GerenciadorAnuncios gerenciadorAnuncios;
-
     private boolean chatGlobalAtivo = true;
     private boolean chatLocalAtivo = true;
+    private GerenciadorCooldown gerenciadorCooldown;
 
     @Override
     public void onEnable() {
@@ -56,6 +55,8 @@ public final class SimplesGlobalChat extends JavaPlugin {
 
         gerenciadorAnuncios =
                 new GerenciadorAnuncios(this);
+
+        gerenciadorCooldown = new GerenciadorCooldown(this);
 
         getServer().getPluginManager().registerEvents(
                 new ChatListener(this, luckPerms),
@@ -209,6 +210,10 @@ public final class SimplesGlobalChat extends JavaPlugin {
 
     public boolean isChatLocalAtivo() {
         return chatLocalAtivo;
+    }
+
+    public GerenciadorCooldown getGerenciadorCooldown() {
+        return gerenciadorCooldown;
     }
 
     public void setChatLocalAtivo(

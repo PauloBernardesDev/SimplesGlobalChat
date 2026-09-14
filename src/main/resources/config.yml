@@ -84,27 +84,57 @@ permissoes:
 
 
 # ==================================================
+# COOLDOWNS
+# ==================================================
+
+cooldown:
+
+  # Tempo entre mensagens no chat local
+  # 0 = sem cooldown
+  local: 0
+
+  # Tempo entre mensagens usando /g
+  # Valor em segundos
+  global: 3
+
+  # Tempo entre anúncios pagos
+  # Valor em segundos
+  anuncio: 60
+
+
+# ==================================================
 # MENSAGENS
 # ==================================================
 
 mensagens:
 
+  # Chat
   chat-global-desativado: "&cO chat global está temporariamente desativado."
-
   chat-local-desativado: "&cO chat local está temporariamente desativado."
-
   chat-local-sem-players: "&7Não há ninguém por perto!"
 
+  # Permissões
   sem-permissao: "&cVocê não possui permissão para isso."
 
+  # Cooldowns
+  cooldown-local: "&cAguarde &e%tempo%s &cantes de enviar outra mensagem."
+  cooldown-global: "&cAguarde &e%tempo%s &cantes de enviar outra mensagem global."
+  cooldown-anuncio: "&cAguarde &e%tempo%s &cantes de enviar outro anúncio."
+
+  # Anúncios
   dinheiro-insuficiente: "&cVocê precisa de &e$%preco% &cpara enviar um anúncio."
-
   anuncio-enviado: "&aSeu anúncio foi enviado por &e$%preco%&a."
+  anuncio-desativado: "&cO sistema de anúncios está desativado."
+  anuncio-falha-pagamento: "&cNão foi possível realizar o pagamento do anúncio."
 
-  recarregado: "&aConfiguração recarregada com sucesso."
-
+  # Comandos
   uso-g: "&cUtilize: /g <mensagem>"
-
   uso-anuncio: "&cUtilize: /anuncio <mensagem>"
-
   uso-aviso: "&cUtilize: /aviso <mensagem>"
+  somente-jogadores: "&cEste comando só pode ser usado por jogadores."
+
+  # Aviso
+  aviso-enviado: "&aAviso enviado com sucesso."
+
+  # Configuração
+  recarregado: "&aConfiguração recarregada com sucesso."

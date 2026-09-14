@@ -43,6 +43,25 @@ public class ChatListener implements Listener {
             return;
         }
 
+        long restante =
+                plugin.getGerenciadorCooldown()
+                        .verificarLocal(jogador.getUniqueId());
+
+        if (restante > 0) {
+
+            evento.setCancelled(true);
+
+            jogador.sendMessage(
+                    colorir(
+                            "&cAguarde &e"
+                                    + restante
+                                    + "s &cantes de enviar outra mensagem."
+                    )
+            );
+
+            return;
+        }
+
         double raio = plugin.getConfig()
                 .getDouble("chat.local.raio", 50);
 
@@ -90,6 +109,9 @@ public class ChatListener implements Listener {
         }
 
         jogador.sendMessage(mensagem);
+
+        plugin.getGerenciadorCooldown()
+                .iniciarLocal(jogador.getUniqueId());
 
         if (!encontrouJogador) {
             jogador.sendMessage(

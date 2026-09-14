@@ -5,4 +5,5 @@ dev\paulobernardes\simplesglobalchat\eventos\ChatListener.class
 dev\paulobernardes\simplesglobalchat\gerenciadores\GerenciadorAnuncios.class
 dev\paulobernardes\simplesglobalchat\comandos\AnuncioComando.class
 dev\paulobernardes\simplesglobalchat\comandos\GlobalComando.class
+dev\paulobernardes\simplesglobalchat\gerenciadores\GerenciadorCooldown.class
 dev\paulobernardes\simplesglobalchat\SimplesGlobalChat.class
