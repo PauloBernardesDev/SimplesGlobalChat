@@ -15,7 +15,10 @@ public class GlobalComando implements CommandExecutor {
     private final SimplesGlobalChat plugin;
     private final LuckPerms luckPerms;
 
-    public GlobalComando(SimplesGlobalChat plugin, LuckPerms luckPerms) {
+    public GlobalComando(
+            SimplesGlobalChat plugin,
+            LuckPerms luckPerms
+    ) {
         this.plugin = plugin;
         this.luckPerms = luckPerms;
     }
@@ -29,121 +32,215 @@ public class GlobalComando implements CommandExecutor {
     ) {
 
         if (!(sender instanceof Player jogador)) {
-            sender.sendMessage("Este comando só pode ser usado por jogadores.");
-            return true;
-        }
 
-        if (args.length == 0) {
-            jogador.sendMessage(colorir(
-                    plugin.getConfig().getString(
-                            "mensagens.uso-g",
-                            "&cUtilize: /g <mensagem>"
-                    )
-            ));
-            return true;
-        }
-
-        if (!plugin.isChatGlobalAtivo()) {
-            jogador.sendMessage(colorir(
-                    plugin.getConfig().getString(
-                            "mensagens.chat-global-desativado",
-                            "&cO chat global está temporariamente desativado."
-                    )
-            ));
-            return true;
-        }
-
-        long restante =
-                plugin.getGerenciadorCooldown()
-                        .verificarGlobal(jogador.getUniqueId());
-
-        if (restante > 0) {
-
-            jogador.sendMessage(
+            sender.sendMessage(
                     colorir(
-                            "&cAguarde &e"
-                                    + restante
-                                    + "s &cantes de enviar outra mensagem global."
+                            plugin.getConfig().getString(
+                                    "mensagens.jogador-apenas",
+                                    "&cEste comando só pode ser usado por jogadores."
+                            )
                     )
             );
 
             return true;
         }
 
-        String mensagemJogador = String.join(" ", args);
+        if (!jogador.hasPermission(
+                "simplesglobalchat.global"
+        )) {
 
-        mensagemJogador = processarMensagem(
-                jogador,
-                mensagemJogador
-        );
+            jogador.sendMessage(
+                    colorir(
+                            plugin.getConfig().getString(
+                                    "mensagens.chat-global-sem-permissao",
+                                    "&cVocê não possui permissão para utilizar o chat global."
+                            )
+                    )
+            );
 
-        String prefixo = obterPrefixo(jogador);
+            return true;
+        }
 
-        String formato = plugin.getConfig()
-                .getString(
-                        "chat.global.formato",
-                        "&8[G] %prefix%&7%player%&8: &7%message%"
+        if (args.length == 0) {
+
+            jogador.sendMessage(
+                    colorir(
+                            plugin.getConfig().getString(
+                                    "mensagens.uso-g",
+                                    "&cUtilize: /g <mensagem>"
+                            )
+                    )
+            );
+
+            return true;
+        }
+
+        if (!plugin.isChatGlobalAtivo()) {
+
+            jogador.sendMessage(
+                    colorir(
+                            plugin.getConfig().getString(
+                                    "mensagens.chat-global-desativado",
+                                    "&cO chat global está temporariamente desativado."
+                            )
+                    )
+            );
+
+            return true;
+        }
+
+        long restante =
+                plugin.getGerenciadorCooldown()
+                        .verificarGlobal(
+                                jogador.getUniqueId()
+                        );
+
+        if (restante > 0) {
+
+            String mensagemCooldown =
+                    plugin.getConfig().getString(
+                            "mensagens.chat-global-cooldown",
+                            "&cAguarde &e%tempo%s &cantes de enviar outra mensagem global."
+                    );
+
+            mensagemCooldown =
+                    mensagemCooldown.replace(
+                            "%tempo%",
+                            String.valueOf(restante)
+                    );
+
+            jogador.sendMessage(
+                    colorir(mensagemCooldown)
+            );
+
+            return true;
+        }
+
+        String mensagemJogador =
+                String.join(" ", args);
+
+        mensagemJogador =
+                processarMensagem(
+                        jogador,
+                        mensagemJogador
                 );
 
-        String mensagemFinal = formato
-                .replace("%prefix%", prefixo)
-                .replace("%player%", jogador.getName())
-                .replace("%message%", mensagemJogador);
+        String prefixo =
+                obterPrefixo(jogador);
 
-        mensagemFinal = colorir(mensagemFinal);
+        String formato =
+                plugin.getConfig()
+                        .getString(
+                                "chat.global.formato",
+                                "&8[G] %prefix%&7%player%&8: &7%message%"
+                        );
 
-        for (Player destinatario : Bukkit.getOnlinePlayers()) {
-            destinatario.sendMessage(mensagemFinal);
+        String mensagemFinal =
+                formato
+                        .replace(
+                                "%prefix%",
+                                prefixo
+                        )
+                        .replace(
+                                "%player%",
+                                jogador.getName()
+                        )
+                        .replace(
+                                "%message%",
+                                mensagemJogador
+                        );
+
+        mensagemFinal =
+                colorir(mensagemFinal);
+
+        for (Player destinatario :
+                Bukkit.getOnlinePlayers()) {
+
+            destinatario.sendMessage(
+                    mensagemFinal
+            );
         }
 
         plugin.getGerenciadorCooldown()
-                .iniciarGlobal(jogador.getUniqueId());
+                .iniciarGlobal(
+                        jogador.getUniqueId()
+                );
 
         return true;
     }
 
-    private String processarMensagem(Player jogador, String mensagem) {
+    private String processarMensagem(
+            Player jogador,
+            String mensagem
+    ) {
 
-        String permissaoCores = plugin.getConfig()
-                .getString(
-                        "permissoes.cores",
-                        "simplesglobalchat.cores"
-                );
+        String permissaoCores =
+                plugin.getConfig()
+                        .getString(
+                                "permissoes.cores",
+                                "simplesglobalchat.cores"
+                        );
 
-        if (jogador.isOp() || jogador.hasPermission(permissaoCores)) {
+        if (jogador.isOp()
+                || jogador.hasPermission(
+                permissaoCores
+        )) {
+
             return colorir(mensagem);
         }
 
-        return mensagem.replaceAll("(?i)&[0-9a-fk-or]", "");
+        return mensagem.replaceAll(
+                "(?i)&[0-9a-fk-or]",
+                ""
+        );
     }
 
-    private String obterPrefixo(Player jogador) {
+    private String obterPrefixo(
+            Player jogador
+    ) {
 
-        User usuario = luckPerms.getUserManager()
-                .getUser(jogador.getUniqueId());
+        User usuario =
+                luckPerms.getUserManager()
+                        .getUser(
+                                jogador.getUniqueId()
+                        );
 
         if (usuario == null) {
             return "";
         }
 
-        String grupo = usuario.getPrimaryGroup();
+        String grupo =
+                usuario.getPrimaryGroup();
 
-        if (grupo == null || grupo.equalsIgnoreCase("default")) {
+        if (grupo == null
+                || grupo.equalsIgnoreCase(
+                "default"
+        )) {
+
             return "";
         }
 
-        String prefixo = usuario.getCachedData()
-                .getMetaData()
-                .getPrefix();
+        String prefixo =
+                usuario.getCachedData()
+                        .getMetaData()
+                        .getPrefix();
 
-        if (prefixo == null || prefixo.isEmpty()) {
+        if (prefixo == null
+                || prefixo.isEmpty()) {
+
             return "";
         }
 
         return colorir(prefixo) + " ";
     }
 
-    private String colorir(String mensagem) {
-        return ChatColor.translateAlternateColorCodes('&', mensagem);
+    private String colorir(
+            String mensagem
+    ) {
+
+        return ChatColor.translateAlternateColorCodes(
+                '&',
+                mensagem
+        );
     }
 }

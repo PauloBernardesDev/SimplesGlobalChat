@@ -115,6 +115,7 @@ mensagens:
 
   # Permissões
   sem-permissao: "&cVocê não possui permissão para isso."
+  chat-global-sem-permissao: "&cVocê não possui permissão para utilizar o chat global."
 
   # Cooldowns
   cooldown-local: "&cAguarde &e%tempo%s &cantes de enviar outra mensagem."
