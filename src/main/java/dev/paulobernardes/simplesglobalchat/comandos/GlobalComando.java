@@ -36,8 +36,8 @@ public class GlobalComando implements CommandExecutor {
             sender.sendMessage(
                     colorir(
                             plugin.getConfig().getString(
-                                    "mensagens.jogador-apenas",
-                                    "&cEste comando só pode ser usado por jogadores."
+                                    "mensagens.somente-jogadores",
+                                    ""
                             )
                     )
             );
@@ -45,15 +45,22 @@ public class GlobalComando implements CommandExecutor {
             return true;
         }
 
+        String permissaoGlobal =
+                plugin.getConfig()
+                        .getString(
+                                "permissoes.global",
+                                "simplesglobalchat.global"
+                        );
+
         if (!jogador.hasPermission(
-                "simplesglobalchat.global"
+                permissaoGlobal
         )) {
 
             jogador.sendMessage(
                     colorir(
                             plugin.getConfig().getString(
                                     "mensagens.chat-global-sem-permissao",
-                                    "&cVocê não possui permissão para utilizar o chat global."
+                                    ""
                             )
                     )
             );
@@ -67,7 +74,7 @@ public class GlobalComando implements CommandExecutor {
                     colorir(
                             plugin.getConfig().getString(
                                     "mensagens.uso-g",
-                                    "&cUtilize: /g <mensagem>"
+                                    ""
                             )
                     )
             );
@@ -81,7 +88,7 @@ public class GlobalComando implements CommandExecutor {
                     colorir(
                             plugin.getConfig().getString(
                                     "mensagens.chat-global-desativado",
-                                    "&cO chat global está temporariamente desativado."
+                                    ""
                             )
                     )
             );
@@ -100,7 +107,7 @@ public class GlobalComando implements CommandExecutor {
             String mensagemCooldown =
                     plugin.getConfig().getString(
                             "mensagens.chat-global-cooldown",
-                            "&cAguarde &e%tempo%s &cantes de enviar outra mensagem global."
+                            ""
                     );
 
             mensagemCooldown =
@@ -110,14 +117,19 @@ public class GlobalComando implements CommandExecutor {
                     );
 
             jogador.sendMessage(
-                    colorir(mensagemCooldown)
+                    colorir(
+                            mensagemCooldown
+                    )
             );
 
             return true;
         }
 
         String mensagemJogador =
-                String.join(" ", args);
+                String.join(
+                        " ",
+                        args
+                );
 
         mensagemJogador =
                 processarMensagem(
@@ -126,13 +138,15 @@ public class GlobalComando implements CommandExecutor {
                 );
 
         String prefixo =
-                obterPrefixo(jogador);
+                obterPrefixo(
+                        jogador
+                );
 
         String formato =
                 plugin.getConfig()
                         .getString(
                                 "chat.global.formato",
-                                "&8[G] %prefix%&7%player%&8: &7%message%"
+                                ""
                         );
 
         String mensagemFinal =
@@ -151,7 +165,9 @@ public class GlobalComando implements CommandExecutor {
                         );
 
         mensagemFinal =
-                colorir(mensagemFinal);
+                colorir(
+                        mensagemFinal
+                );
 
         for (Player destinatario :
                 Bukkit.getOnlinePlayers()) {
@@ -186,7 +202,9 @@ public class GlobalComando implements CommandExecutor {
                 permissaoCores
         )) {
 
-            return colorir(mensagem);
+            return colorir(
+                    mensagem
+            );
         }
 
         return mensagem.replaceAll(
@@ -231,12 +249,18 @@ public class GlobalComando implements CommandExecutor {
             return "";
         }
 
-        return colorir(prefixo) + " ";
+        return colorir(
+                prefixo
+        ) + " ";
     }
 
     private String colorir(
             String mensagem
     ) {
+
+        if (mensagem == null) {
+            return "";
+        }
 
         return ChatColor.translateAlternateColorCodes(
                 '&',

@@ -123,13 +123,32 @@ public class ChatListener implements Listener {
         }
     }
 
-    private String processarMensagem(Player jogador, String mensagem) {
+    private String processarMensagem(
+            Player jogador,
+            String mensagem
+    ) {
 
-        if (jogador.isOp() || jogador.hasPermission("simplesglobalchat.cores")) {
-            return colorir(mensagem);
+        String permissaoCores =
+                plugin.getConfig()
+                        .getString(
+                                "permissoes.cores",
+                                "simplesglobalchat.cores"
+                        );
+
+        if (jogador.isOp()
+                || jogador.hasPermission(
+                permissaoCores
+        )) {
+
+            return colorir(
+                    mensagem
+            );
         }
 
-        return mensagem.replaceAll("(?i)&[0-9a-fk-or]", "");
+        return mensagem.replaceAll(
+                "(?i)&[0-9a-fk-or]",
+                ""
+        );
     }
 
     private String obterPrefixo(Player jogador) {

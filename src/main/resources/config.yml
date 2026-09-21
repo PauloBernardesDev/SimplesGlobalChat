@@ -68,19 +68,27 @@ aviso:
 # PERMISSÕES
 # ==================================================
 
-permissoes:
+permissions:
 
-  # Permissão para administrar o chat
-  admin: "simplesglobalchat.admin"
+  simplesglobalchat.global:
+    description: Permite utilizar o chat global
+    default: true
 
-  # Permissão para /aviso
-  aviso: "simplesglobalchat.aviso"
+  simplesglobalchat.cores:
+    description: Permite utilizar cores e efeitos no chat
+    default: true
 
-  # Permissão para usar cores e efeitos no chat
-  cores: "simplesglobalchat.cores"
+  simplesglobalchat.admin:
+    description: Permite administrar o sistema de chat
+    default: op
 
-  # Permissão para administrar anúncios automáticos
-  anuncios: "simplesglobalchat.anuncios"
+  simplesglobalchat.aviso:
+    description: Permite utilizar o comando /aviso
+    default: op
+
+  simplesglobalchat.anuncios:
+    description: Permite administrar anúncios automáticos
+    default: op
 
 
 # ==================================================
