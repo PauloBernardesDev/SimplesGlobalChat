@@ -1,6 +1,7 @@
 package dev.paulobernardes.simplesglobalchat.eventos;
 
 import dev.paulobernardes.simplesglobalchat.SimplesGlobalChat;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
@@ -16,28 +17,38 @@ public class ChatListener implements Listener {
     private final SimplesGlobalChat plugin;
     private final LuckPerms luckPerms;
 
-    public ChatListener(SimplesGlobalChat plugin, LuckPerms luckPerms) {
+    public ChatListener(
+            SimplesGlobalChat plugin,
+            LuckPerms luckPerms
+    ) {
         this.plugin = plugin;
         this.luckPerms = luckPerms;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void aoEnviarMensagem(AsyncPlayerChatEvent evento) {
+    public void aoEnviarMensagem(
+            AsyncPlayerChatEvent evento
+    ) {
 
         if (evento.isCancelled()) {
             return;
         }
 
-        Player jogador = evento.getPlayer();
+        Player jogador =
+                evento.getPlayer();
 
         if (!plugin.isChatLocalAtivo()) {
+
             evento.setCancelled(true);
 
             jogador.sendMessage(
-                    colorir(plugin.getConfig().getString(
-                            "mensagens.chat-local-desativado",
-                            "&cO chat local está temporariamente desativado."
-                    ))
+                    colorir(
+                            plugin.getConfig()
+                                    .getString(
+                                            "mensagens.chat-local-desativado",
+                                            ""
+                                    )
+                    )
             );
 
             return;
@@ -45,80 +56,145 @@ public class ChatListener implements Listener {
 
         long restante =
                 plugin.getGerenciadorCooldown()
-                        .verificarLocal(jogador.getUniqueId());
+                        .verificarLocal(
+                                jogador.getUniqueId()
+                        );
 
         if (restante > 0) {
 
             evento.setCancelled(true);
 
+            String mensagemCooldown =
+                    plugin.getConfig()
+                            .getString(
+                                    "mensagens.chat-local-cooldown",
+                                    ""
+                            );
+
+            mensagemCooldown =
+                    mensagemCooldown.replace(
+                            "%tempo%",
+                            String.valueOf(restante)
+                    );
+
             jogador.sendMessage(
                     colorir(
-                            "&cAguarde &e"
-                                    + restante
-                                    + "s &cantes de enviar outra mensagem."
+                            mensagemCooldown
                     )
             );
 
             return;
         }
 
-        double raio = plugin.getConfig()
-                .getDouble("chat.local.raio", 50);
+        double raio =
+                plugin.getConfig()
+                        .getDouble(
+                                "chat.local.raio",
+                                50
+                        );
 
-        String prefixo = obterPrefixo(jogador);
-
-        String formato = plugin.getConfig()
-                .getString(
-                        "chat.local.formato",
-                        "&7[L] %prefix%&f%player%&7: &f%message%"
+        String prefixo =
+                obterPrefixo(
+                        jogador
                 );
 
-        String mensagemJogador = processarMensagem(
-                jogador,
-                evento.getMessage()
-        );
+        String formato =
+                plugin.getConfig()
+                        .getString(
+                                "chat.local.formato",
+                                ""
+                        );
 
-        String mensagem = formato
-                .replace("%prefix%", prefixo)
-                .replace("%player%", jogador.getName())
-                .replace("%message%", mensagemJogador);
+        String mensagemJogador =
+                processarMensagem(
+                        jogador,
+                        evento.getMessage()
+                );
 
-        mensagem = colorir(mensagem);
+        String mensagem =
+                formato
+                        .replace(
+                                "%prefix%",
+                                prefixo
+                        )
+                        .replace(
+                                "%player%",
+                                jogador.getName()
+                        )
+                        .replace(
+                                "%message%",
+                                mensagemJogador
+                        );
+
+        if (Bukkit.getPluginManager()
+                .isPluginEnabled(
+                        "PlaceholderAPI"
+                )) {
+
+            mensagem =
+                    PlaceholderAPI.setPlaceholders(
+                            jogador,
+                            mensagem
+                    );
+        }
+
+        mensagem =
+                colorir(
+                        mensagem
+                );
 
         evento.setCancelled(true);
 
-        boolean encontrouJogador = false;
+        boolean encontrouJogador =
+                false;
 
-        for (Player destinatario : Bukkit.getOnlinePlayers()) {
+        for (Player destinatario :
+                Bukkit.getOnlinePlayers()) {
 
             if (destinatario.equals(jogador)) {
                 continue;
             }
 
-            if (!destinatario.getWorld().equals(jogador.getWorld())) {
+            if (!destinatario.getWorld()
+                    .equals(
+                            jogador.getWorld()
+                    )) {
                 continue;
             }
 
-            if (destinatario.getLocation().distance(jogador.getLocation()) > raio) {
+            if (destinatario.getLocation()
+                    .distance(
+                            jogador.getLocation()
+                    ) > raio) {
                 continue;
             }
 
             encontrouJogador = true;
 
-            destinatario.sendMessage(mensagem);
+            destinatario.sendMessage(
+                    mensagem
+            );
         }
 
-        jogador.sendMessage(mensagem);
+        jogador.sendMessage(
+                mensagem
+        );
 
         plugin.getGerenciadorCooldown()
-                .iniciarLocal(jogador.getUniqueId());
+                .iniciarLocal(
+                        jogador.getUniqueId()
+                );
 
         if (!encontrouJogador) {
+
             jogador.sendMessage(
-                    colorir(plugin.getConfig().getString(
-                            "mensagens.chat-local-sem-players",
-                            "&7Não há ninguém por perto!"
-                    ))
+                    colorir(
+                            plugin.getConfig()
+                                    .getString(
+                                            "mensagens.chat-local-sem-players",
+                                            ""
+                                    )
+                    )
             );
         }
     }
@@ -151,33 +227,58 @@ public class ChatListener implements Listener {
         );
     }
 
-    private String obterPrefixo(Player jogador) {
+    private String obterPrefixo(
+            Player jogador
+    ) {
 
-        User usuario = luckPerms.getUserManager()
-                .getUser(jogador.getUniqueId());
+        User usuario =
+                luckPerms.getUserManager()
+                        .getUser(
+                                jogador.getUniqueId()
+                        );
 
         if (usuario == null) {
             return "";
         }
 
-        String grupo = usuario.getPrimaryGroup();
+        String grupo =
+                usuario.getPrimaryGroup();
 
-        if (grupo == null || grupo.equalsIgnoreCase("default")) {
+        if (grupo == null
+                || grupo.equalsIgnoreCase(
+                "default"
+        )) {
+
             return "";
         }
 
-        String prefixo = usuario.getCachedData()
-                .getMetaData()
-                .getPrefix();
+        String prefixo =
+                usuario.getCachedData()
+                        .getMetaData()
+                        .getPrefix();
 
-        if (prefixo == null || prefixo.isEmpty()) {
+        if (prefixo == null
+                || prefixo.isEmpty()) {
+
             return "";
         }
 
-        return colorir(prefixo) + " ";
+        return colorir(
+                prefixo
+        ) + " ";
     }
 
-    private String colorir(String mensagem) {
-        return ChatColor.translateAlternateColorCodes('&', mensagem);
+    private String colorir(
+            String mensagem
+    ) {
+
+        if (mensagem == null) {
+            return "";
+        }
+
+        return ChatColor.translateAlternateColorCodes(
+                '&',
+                mensagem
+        );
     }
 }

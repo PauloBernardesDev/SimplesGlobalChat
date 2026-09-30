@@ -1,6 +1,7 @@
 package dev.paulobernardes.simplesglobalchat.comandos;
 
 import dev.paulobernardes.simplesglobalchat.SimplesGlobalChat;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
@@ -163,6 +164,16 @@ public class GlobalComando implements CommandExecutor {
                                 "%message%",
                                 mensagemJogador
                         );
+
+        if (Bukkit.getPluginManager()
+                .isPluginEnabled("PlaceholderAPI")) {
+
+            mensagemFinal =
+                    PlaceholderAPI.setPlaceholders(
+                            jogador,
+                            mensagemFinal
+                    );
+        }
 
         mensagemFinal =
                 colorir(

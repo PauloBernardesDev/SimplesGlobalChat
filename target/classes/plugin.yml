@@ -7,6 +7,9 @@ depend:
   - LuckPerms
   - Vault
 
+softdepend:
+  - PlaceholderAPI
+
 commands:
 
   g:
